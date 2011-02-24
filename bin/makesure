@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+require 'makesure'
+require 'optparse'
+
+cron_path = '/etc/cron.d/makesure.cron'
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: makesure [options] COMMAND"
+
+  opts.separator ""
+  opts.separator "Options:"
+
+  opts.on("-c", "--cron <path to file>", "Where should makesure put its cron entries? Must be a file that will be loaded by cron") do |path|
+    cron_path = path
+  end
+
+  opts.on("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+
+  opts.separator ""
+  opts.separator "Commands:"
+  opts.separator "  init    Creates an initial Makesurefile"
+  opts.separator "  update  Updates cron with commands scheduled by your system definitions"
+end
+
+parser.parse!
+
+case ARGV[0]
+when 'init'
+  dir = File.expand_path(ARGV[1] || '.')
+  abort "#{dir} is not a directory" unless File.directory?(dir)
+  
+  file = "Makesurefile"
+  if File.exists?(file)
+    warn "[skip] '#{file}' already exists"
+  elsif File.exists?(file.downcase)
+    warn "[skip] '#{file.downcase}' exists, which could conflict with `#{file}'"
+  else
+    puts "[add] writing '#{file}'"
+    File.open(file, "w") do |f|
+      f.write(<<-FILE)
+# Tell makesure how to get in touch when things break
+# (hint: Makesure.alert_options are passed almost directly to Pony.mail)
+Makesure.alert_options = {
+  :to   => 'dev@example.com', # who should hear about it when something's wrong?
+  :via  => :smtp, # how should makesure send email (:smtp or :sendmail)
+  :via_options => {
+    :address              => 'smtp.gmail.com',
+    :port                 => '587',
+    :enable_starttls_auto => true,
+    :user_name            => 'user',
+    :password             => 'password',
+    :authentication       => :plain, # :plain, :login, :cram_md5, no auth by default
+    :domain               => "localhost.localdomain" # the HELO domain provided by the client to the server
+  }
+}
+
+Makesure.uid = "nobody" # what user should makesure run its tasks as (this can be set per system as well)
+
+# Tell makesure about your systems
+Dir['systems/*.rb', 'lib/systems/*.rb'].each { |sys| load(sys) }
+FILE
+    end
+  end
+when 'update'
+  Makesure.load_system_defs
+  Makesure::Cron.new(:cron_path => cron_path)
+else
+  puts parser.help
+end

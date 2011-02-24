@@ -1,0 +1,68 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+require 'makesure'
+require 'optparse'
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: makesure-runner [options] COMMAND"
+
+  opts.separator ""
+  opts.separator "Options:"
+
+  # opts.on("-c", "--cron <path to file>", "path to the file makesure should write your cron specs") do |path|
+  #   cron_path = path
+  # end
+
+  opts.on("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+
+  opts.separator ""
+  opts.separator "Commands:"
+  opts.separator "  run COMMAND        Runs the specified COMMAND and monitors its output"
+  opts.separator "  verify SYSTEM      Verfies the state of the specified SYSTEM"
+  opts.separator "  summarize SYSTEM   Collects summary data for the specified SYSTEM"
+end
+
+parser.parse!
+
+case ARGV[0]
+when 'run'
+  cmd = ARGV[1]
+  
+  Makesure.load_system_defs
+  Makesure::Runner.new(cmd).run!
+  
+when 'verify'
+  sys  = ARGV[1]
+  vrfy = ARGV[2]
+  
+  Makesure.load_system_defs
+  system = Makesure.system_with_name(sys)
+  abort "Couldn't find system: #{sys}" unless system
+  verify = system.verify_with_name(vrfy)
+  abort "Couldn't find verify: #{vrfy}" unless verify
+  
+  Makesure.log "Running verify #{sys} #{vrfy}"
+  verify.run!
+  
+when 'summarize'
+  sys  = ARGV[1]
+  smrz = ARGV[2]
+  
+  Makesure.load_system_defs
+  system = Makesure.system_with_name(sys)
+  abort "Couldn't find system: #{sys}" unless system
+  summarize = system.summarize_with_name(smrz)
+  abort "Couldn't find summarize: #{smrz}" unless summarize
+  
+  Makesure.log "Running summarize #{sys} #{smrz}"
+  summarize.run!
+  
+else
+  puts parser.help
+end
+
