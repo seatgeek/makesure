@@ -6,6 +6,7 @@ require 'makesure/system'
 require 'makesure/cmd'
 require 'makesure/verify'
 require 'makesure/summarize'
+require 'makesure/version'
 
 module Makesure
   
