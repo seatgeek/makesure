@@ -26,7 +26,6 @@ module Makesure
     load(file)
     abort "No system specifications found" unless Makesure.systems.size > 0
     Makesure.log "Loaded #{Makesure.systems.size} system specifications"
-    true
   rescue Exception => e
     if e.instance_of?(SystemExit)
       raise
@@ -34,7 +33,7 @@ module Makesure
       Makesure.warn "There was an error loading #{file}"
       Makesure.warn "\t" + e.message
       Makesure.warn "\t" + e.backtrace.join("\n\t")
-      false
+      abort "Couldn't load your Makesurefile"
     end
   end
   
