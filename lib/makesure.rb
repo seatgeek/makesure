@@ -20,9 +20,13 @@ module Makesure
                 :alert_options,
                 :log_level
   
+  def makesurefile
+    File.expand_path(File.join(Dir.pwd, "Makesurefile"))
+  end
+  
   def load_system_defs
-    file = File.join(Dir.pwd, "Makesurefile")
-    Makesure.log("Loading #{file}")
+    file = makesurefile
+    Makesure.log("Loading Makesurefile")
     load(file)
     abort "No system specifications found" unless Makesure.systems.size > 0
     Makesure.log "Loaded #{Makesure.systems.size} system specifications"

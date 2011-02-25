@@ -1,0 +1,1 @@
+* Use Process#spawn or Open3#popen3 so we can capture stderr
