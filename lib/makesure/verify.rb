@@ -14,6 +14,7 @@ module Makesure
       begin
         
         blk.call
+        Makesure.log "Everything is copacetic"
         
       rescue Exception => e
         Makesure.warn "Uh oh, something's up"
