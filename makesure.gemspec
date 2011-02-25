@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Waller"]
-  s.date = %q{2011-02-24}
+  s.date = %q{2011-02-25}
   s.description = %q{Makesure is a set of tools to define, verify and monitor systems in a unix environment. It allows you to schedule commands that constitue a system via cron (and monitors the execution of those commands), it gives you a way to verify the state of a system (and alerts you when there are problems), and it provides a simple mechanism for collecting statistics about that system.}
   s.email = %q{eric@seatgeek.com}
   s.executables = ["makesure", "makesure-runner"]
@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
     "lib/makesure/system.rb",
     "lib/makesure/verify.rb",
     "lib/makesure/version.rb",
+    "makesure.gemspec",
     "test/helper.rb",
     "test/test_makesure.rb"
   ]
