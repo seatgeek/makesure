@@ -62,6 +62,8 @@ Makesure.alert_options = {
 
 Makesure.uid = "nobody" # what user should makesure run its tasks as (this can be set per system as well)
 
+# Makesure.chdir = '/some/path...' # where should makesure run commands (defaults to File.dirname(Makesurefile))
+
 # Tell makesure about your systems
 Dir['systems/*.rb', 'lib/systems/*.rb'].each { |sys| load(sys) }
 FILE

@@ -17,6 +17,7 @@ module Makesure
   
   # global options
   attr_accessor :uid,
+                :chdir,
                 :alert_options,
                 :log_level
   
