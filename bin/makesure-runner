@@ -48,6 +48,7 @@ when 'verify'
   
   Makesure.log "Running verify #{sys} #{vrfy}"
   verify.run!
+  Makesure.log "Everything is copacetic"
   
 when 'summarize'
   sys  = ARGV[1]
