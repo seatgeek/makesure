@@ -19,6 +19,7 @@ module Makesure
   attr_accessor :uid,
                 :chdir,
                 :alert_options,
+                :cron_env,
                 :log_level
   
   def makesurefile
