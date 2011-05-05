@@ -6,6 +6,7 @@ require 'makesure'
 require 'optparse'
 
 cron_path = '/etc/cron.d/makesure.cron'
+rvm       = false
 
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: makesure [options] COMMAND"
@@ -15,6 +16,10 @@ parser = OptionParser.new do |opts|
 
   opts.on("-c", "--cron <path to file>", "Where should makesure put its cron entries? Must be a file that will be loaded by cron") do |path|
     cron_path = path
+  end
+
+  opts.on("-r", "--[no-]rvm", "Whether or not Makesure should wrap the commands in its cron file for use with RVM") do |r|
+    rvm = r
   end
 
   opts.on("-h", "--help", "Show this message") do
@@ -28,7 +33,7 @@ parser = OptionParser.new do |opts|
   opts.separator "  update  Updates cron with commands scheduled by your system definitions"
 end
 
-parser.parse!
+parser.parse!(ARGV)
 
 case ARGV[0]
 when 'init'
@@ -71,7 +76,7 @@ FILE
   end
 when 'update'
   Makesure.load_system_defs
-  Makesure::Cron.new(:cron_path => cron_path)
+  Makesure::Cron.new(:cron_path => cron_path, :rvm => rvm)
 else
   puts parser.help
 end
