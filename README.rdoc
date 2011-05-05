@@ -1,6 +1,6 @@
-= makesure
+= Makesure
 
-Description goes here.
+Makesure is a set of tools to define, verify and monitor systems in a unix environment. It allows you to schedule commands that constitue a system via cron (and monitors the execution of those commands), it gives you a way to verify the state of a system (and alerts you when there are problems), and it provides a simple mechanism for collecting statistics about that system.
 
 == Contributing to makesure
  
